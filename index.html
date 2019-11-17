@@ -13,9 +13,12 @@
 			<h1>Encriptación - Desencriptación tipo RSA, con clave pública y privada</h1>
 		</div>
 		
-		<div class="names">
-			<p>Camilo Guio <br> Sergio Escandon</p>
-			<h3>Sistemas de Comnunicaciones</h3>
+		<div class="name">
+			<p>
+			Camilo Guio <br>
+			Sergio Escandon
+			</p>
+			<h3>Sistemas de Comunicaciones</h3>
 		</div>
 		
 		<div class='rowSegment'>
@@ -37,6 +40,7 @@
 		
 		
 		<div class='rowSegment'>
+			<div class='activeBits'>
 				<div class='textareaSegment' id='plaintext'>
 					<div class='textareaBlock'>
 						<textarea id='plainTextInput' placeholder="Ingresa tu texto a codificar"></textarea>
@@ -45,11 +49,13 @@
 				<div class='textareaBlock'>
 					<textarea id='cryptoTextOutput' placeholder="Texto Encriptado"></textarea>
 				</div>
-				<input class='button' name='encrypt' type='button' value='Encriptar'>			
+				<input class='button' name='encrypt' type='button' value='Encriptar'>
+		</div>			
 	</div>
 	
 	
 	<div class='rowSegment'>
+			<div class='activeBits'>
 			<div class='textareaSegment' id='cryptoText'>
 				<div class='textareaBlock'>
 					<textarea id='cryptoTextInput' placeholder="Texto encriptado"></textarea>
@@ -60,7 +66,7 @@
 			</div>
 			<input class='button' name='decrypt' type='button' value='Desencriptar' title='Copia el texto criptográfico generado si el campo de entrada está vacío.'>
 			
-
+			</div>
 	</div>
 
 	<div><input style='background: #ea1c1c;' class='button' name='clearAll' type='button' value='Borrar Todos los Campos'></div></div>

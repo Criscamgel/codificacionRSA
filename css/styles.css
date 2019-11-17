@@ -79,7 +79,19 @@ min-height:12px;
     grid-column: 1/3;
 }
 
-.textareaBlock{
+.activeBits{
+    grid-row: 1;
+    grid-column: 1/3;
+}
+
+.activeBits{
     grid-row: 2;
-    margin: 10px 0px;  
+    margin: 10px 0px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+}
+
+.textareaBlock{
+    grid-column: 2;
 }
