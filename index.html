@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta content='text/html; charset=utf-8' http-equiv='Content-Type'><!-- META http-equiv="refresh" content="5;URL=http://somewhere.com" -->
+	<title>RSA/Public Key Encryption Tool</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js">
+	</script>
+	<link rel='stylesheet' type='text/css' href='css/styles.css'>	
+</head>
+<body>
+	<div id='mainContainer'>
+		<div class='headerText info' style='border-bottom:none;'>
+			<h1>Encriptación - Desencriptación tipo RSA, con clave pública y privada</h1>
+		</div>
+		
+		<div class="names">
+			<p>Camilo Guio <br> Sergio Escandon</p>
+			<h3>Sistemas de Comnunicaciones</h3>
+		</div>
+		
+		<div class='rowSegment'>
+			<input class='button' name='generateKeys' type='button' value='Generar llaves'>
+			
+				<div class='textareaSegment' id='keys'>
+					<div class='textareaBlock'>
+						<textarea id='privateKey' placeholder="Llave Privada" disabled></textarea>
+					</div>
+				</div>
+				<div class='textareaBlock'>
+					<textarea id='publicKey' placeholder="Llave Publica" disabled></textarea>
+				</div>
+			</div>
+			<div class='status'>
+			</div>
+		</div>
+		
+		
+		
+		<div class='rowSegment'>
+				<div class='textareaSegment' id='plaintext'>
+					<div class='textareaBlock'>
+						<textarea id='plainTextInput' placeholder="Ingresa tu texto a codificar"></textarea>
+					</div>
+				</div>
+				<div class='textareaBlock'>
+					<textarea id='cryptoTextOutput' placeholder="Texto Encriptado"></textarea>
+				</div>
+				<input class='button' name='encrypt' type='button' value='Encriptar'>			
+	</div>
+	
+	
+	<div class='rowSegment'>
+			<div class='textareaSegment' id='cryptoText'>
+				<div class='textareaBlock'>
+					<textarea id='cryptoTextInput' placeholder="Texto encriptado"></textarea>
+				</div>
+			</div>
+			<div class='textareaBlock'>
+				<textarea id='plainTextOutput' placeholder="texto desencriptado"></textarea>
+			</div>
+			<input class='button' name='decrypt' type='button' value='Desencriptar' title='Copia el texto criptográfico generado si el campo de entrada está vacío.'>
+			
+
+	</div>
+
+	<div><input style='background: #ea1c1c;' class='button' name='clearAll' type='button' value='Borrar Todos los Campos'></div></div>
+	
+	
+	<script src="rsaFunctionsBrowserify.js">
+	</script> 
+	<script type='text/javascript'>
+$(document).ready(function() {
+	const rsaFunctions = new window.rsaFunctions();
+	
+	const processChangedData=event=>{
+	
+			if (event) {
+				const item = $(event.target);
+				window.item=item;
+				const name = item.attr('id');
+				const status = item.parent().parent().parent().parent().find('.status').text('');
+	
+				const privateKey = $('#privateKey').val();
+				const publicKey = $('#publicKey').val();
+				rsaFunctions.setKeys(privateKey, publicKey, status);
+			}
+			
+			updateButtonStatus();
+		}
+
+	const updateButtonStatus = () => {
+		
+		const emptyList = [];
+		$('textarea').each((inx, item) => {
+			const domObj = $(item);
+			if (!domObj.val()) {
+				emptyList.push(domObj.attr('id'));
+			}
+		});
+
+		$('input').prop('disabled', false);
+		const bothKeysEmpty=emptyList.includes('privateKey') && emptyList.includes('publicKey')
+
+		!(bothKeysEmpty || emptyList.includes('plainTextInput')) || $('[name="encrypt"]').prop('disabled', true);
+
+		const noCryptoTextAnywhere=emptyList.includes('cryptoTextInput') && emptyList.includes('cryptoTextOutput');
+		
+		!(bothKeysEmpty || noCryptoTextAnywhere) || $('[name="decrypt"]').prop('disabled', true);
+		!emptyList.includes('privateKey') || $('[name="extractPublic"]').prop('disabled', true);
+
+
+	};
+
+	updateButtonStatus(); //Boton Inicial - Generación de Keys
+
+	$('textarea').on('change', processChangedData);
+
+	$('.button').on('click', event => {
+		const privateKey = $('#privateKey').val();
+		const publicKey = $('#publicKey').val();
+
+		const item = $(event.target);
+		const name = item.attr('name');
+		const container = item.parent().parent().parent().parent();
+		const status = container.find('.status');
+		const thisStatus = $(status[0]);
+
+		const dataObjects = {
+			status: { domObj: thisStatus },
+			requestingContainer: container
+		};
+
+		$('body').find('textarea').each((inx, item) => {
+			const domObj = $(item);
+			const name = domObj.prop('id');
+			dataObjects[name] = {
+				domObj: domObj,
+				value: domObj.val(),
+				requestingContainer: container
+			};
+		});
+
+		[
+			'clearThis',
+			'clearPublicKey',
+			'clearCryptoTextInput',
+			'clearAll'
+		].includes(name) ||
+			dataObjects.status.domObj.text(
+				'Generando llave publica y privada, por favor espera...'
+			);
+
+		setTimeout(() => {
+			rsaFunctions[name](dataObjects, $(status[0]));
+			updateButtonStatus();
+		}, 500);
+	});
+});
+
+
+      /* ]]> */
+	</script>
+</body>
+</html>
